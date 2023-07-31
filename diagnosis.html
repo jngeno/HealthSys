@@ -78,7 +78,7 @@
                     <form id="diagnosis-form" class="contact-form">
                         <div class="form-group">
                             <label for="symptoms">Select Symptoms:</label>
-                            <input type="text" id="symptoms" name="symptoms" list="symptoms-list" required>
+                            <input type="text" id="symptoms" name="symptoms" list="symptoms-list" required multiple>
                             <datalist id="symptoms-list"></datalist>
                         </div>
 
@@ -224,23 +224,28 @@
             const symptomsInput = document.getElementById("symptoms");
             const symptomsDatalist = document.getElementById("symptoms-list");
 
-            // Extract the selected symptom ID from the datalist
-            const selectedSymptom = document.querySelector(
-                "#symptoms-list option[value='" + symptomsInput.value + "']"
-            );
-            const symptomId = selectedSymptom ? selectedSymptom.getAttribute("data-id") : null;
+            // Extract the selected symptoms IDs from the datalist
+            const selectedSymptoms = symptomsInput.value.split(",").map((symptomName) => {
+                const selectedSymptom = document.querySelector(
+                    "#symptoms-list option[value='" + symptomName.trim() + "']"
+                );
+                return selectedSymptom ? selectedSymptom.getAttribute("data-id") : null;
+            });
 
             // Get other form data (gender and year of birth)
             const gender = document.getElementById("gender").value;
             const yearOfBirth = document.getElementById("year-of-birth").value;
 
-            if (symptomId && gender && yearOfBirth) {
-                // Call the fetchDiagnosis function with the selected symptom ID, gender, and year of birth
-                try {
-                    const diagnosisResults = await fetchDiagnosis([symptomId], gender, yearOfBirth);
+            // Filter out any null or undefined symptom IDs
+            const symptomIds = selectedSymptoms.filter((symptomId) => symptomId);
 
-                    // Process and display the diagnosis results here
-                    console.log(diagnosisResults);
+            if (symptomIds.length > 0 && gender && yearOfBirth) {
+                // Call the fetchDiagnosis function with the selected symptom IDs, gender, and year of birth
+                try {
+                    const diagnosisResults = await fetchDiagnosis(symptomIds, gender, yearOfBirth);
+
+                    // Process and display the diagnosis results in the HTML
+                    displayDiagnosisResults(diagnosisResults);
                 } catch (error) {
                     console.error("Error fetching diagnosis:", error);
                 }
@@ -261,7 +266,8 @@
             const diagnosisList = document.createElement("ul");
             for (const diagnosis of diagnosisResults) {
                 const diagnosisItem = document.createElement("li");
-                diagnosisItem.textContent = `Issue: ${diagnosis.Issue.Name}, Specialisation: ${diagnosis.Specialisation.join(", ")}`;
+                const issueName = diagnosis.Issue.Name;
+                diagnosisItem.textContent = `Issue: ${issueName}`;
                 diagnosisList.appendChild(diagnosisItem);
             }
             diagnosisResultsDiv.appendChild(diagnosisList);
@@ -285,10 +291,10 @@
             const gender = document.getElementById("gender").value;
             const yearOfBirth = document.getElementById("year-of-birth").value;
 
-            if (symptomId && gender && yearOfBirth) {
-                // Call the fetchDiagnosis function with the selected symptom ID, gender, and year of birth
+            if (symptomIds.length > 0 && gender && yearOfBirth) {
+                // Call the fetchDiagnosis function with the selected symptom IDs, gender, and year of birth
                 try {
-                    const diagnosisResults = await fetchDiagnosis([symptomId], gender, yearOfBirth);
+                    const diagnosisResults = await fetchDiagnosis(symptomIds, gender, yearOfBirth);
 
                     // Process and display the diagnosis results in the HTML
                     displayDiagnosisResults(diagnosisResults);
@@ -297,6 +303,7 @@
                 }
             }
         });
+
 
         // Fetch symptoms when the page loads
         fetchSymptoms();
