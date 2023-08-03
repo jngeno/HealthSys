@@ -108,6 +108,9 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6" id="diagnosis-results">
                     <!-- Diagnosis results will be displayed here -->
+                    <div id="diagnosis-message">
+                        <!-- This placeholder element will be used for displaying the message -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -182,8 +185,8 @@
         // Function to fetch diagnosis results based on symptoms, gender, and year of birth
         async function fetchDiagnosis(symptomIds, gender, yearOfBirth) {
             try {
-                const apiUrl = "https://healthservice.priaid.ch/diagnosis";
-                const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvaG5uZ2Vuby5qbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEwMDYwIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMTA5IiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6IjEwMCIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IkJhc2ljIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9sYW5ndWFnZSI6ImVuLWdiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9leHBpcmF0aW9uIjoiMjA5OS0xMi0zMSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcHN0YXJ0IjoiMjAyMy0wNy0yNCIsImlzcyI6Imh0dHBzOi8vYXV0aHNlcnZpY2UucHJpYWlkLmNoIiwiYXVkIjoiaHR0cHM6Ly9oZWFsdGhzZXJ2aWNlLnByaWFpZC5jaCIsImV4cCI6MTY5MDgxNjUyOSwibmJmIjoxNjkwODA5MzI5fQ.goAaJNCT_UpkafD7pbhHDe3Cu-CMxzWHgBi1HVjsip0";
+                const apiUrl = "https://sandbox-healthservice.priaid.ch/diagnosis";
+                const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvaG5uZ2Vuby5qbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjEyNjkyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMjAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9saW1pdCI6Ijk5OTk5OTk5OSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbWVtYmVyc2hpcCI6IlByZW1pdW0iLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIzLTA3LTI0IiwiaXNzIjoiaHR0cHM6Ly9zYW5kYm94LWF1dGhzZXJ2aWNlLnByaWFpZC5jaCIsImF1ZCI6Imh0dHBzOi8vaGVhbHRoc2VydmljZS5wcmlhaWQuY2giLCJleHAiOjE2OTEwNzE4MzksIm5iZiI6MTY5MTA2NDYzOX0.b0OynHmz3MKCav_KRWcpCGThhgmOaoRG_-ExWOr53nY";
 
                 // Construct the query parameters for the diagnosis API
                 const params = new URLSearchParams({
@@ -263,15 +266,29 @@
             diagnosisTitle.textContent = "Diagnosis Results:";
             diagnosisResultsDiv.appendChild(diagnosisTitle);
 
-            const diagnosisList = document.createElement("ul");
-            for (const diagnosis of diagnosisResults) {
-                const diagnosisItem = document.createElement("li");
-                const issueName = diagnosis.Issue.Name;
-                diagnosisItem.textContent = `Issue: ${issueName}`;
-                diagnosisList.appendChild(diagnosisItem);
+            if (diagnosisResults.length > 0) {
+                const diagnosisList = document.createElement("ul");
+                for (const diagnosis of diagnosisResults) {
+                    const diagnosisItem = document.createElement("li");
+                    const issueName = diagnosis.Issue.Name;
+                    diagnosisItem.textContent = `Issue: ${issueName}`;
+                    diagnosisList.appendChild(diagnosisItem);
+                }
+                diagnosisResultsDiv.appendChild(diagnosisList);
+            } else {
+                // Show a message when there are no diagnosis results
+                const noResultsMessage = document.createElement("p");
+                noResultsMessage.textContent = "No diagnosis results found.";
+                diagnosisResultsDiv.appendChild(noResultsMessage);
             }
-            diagnosisResultsDiv.appendChild(diagnosisList);
+
+            // Show the appointment message at the end
+            const appointmentMessage = document.createElement("p");
+            appointmentMessage.textContent =
+                "Please book an appointment to see the doctor for a proper diagnosis.";
+            diagnosisResultsDiv.appendChild(appointmentMessage);
         }
+
 
         document.getElementById("diagnosis-form").addEventListener("submit", async (event) => {
             event.preventDefault();

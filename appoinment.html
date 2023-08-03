@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="plugins/slick-carousel/slick/slick-theme.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
 
 	<!-- Main Stylesheet -->
 	<link rel="stylesheet" href="css/style.css">
@@ -63,7 +64,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="block text-center">
-						<span class="text-white">GEt a booking</span>
+						<span class="text-white">Get a booking</span>
 						<h1 class="text-capitalize mb-5 text-lg">Appoinment</h1>
 
 					</div>
@@ -78,47 +79,55 @@
 
 				<div class="col-lg-8">
 					<div class="appoinment-wrap mt-5 mt-lg-0 pl-lg-5">
-						<h2 class="mb-2 title-color">Book an appoinment</h2>
-						<form id="#" class="appoinment-form" method="post" action="#">
+						<h2 class="mb-2 title-color">Book an appointment</h2>
+						<form id="appointment-form" class="appoinment-form" method="post" action="appointment.php">
 							<div class="row">
 								<div class="col-lg-6">
 									<div class="form-group">
+										<input name="patient_name" id="patient_name" type="text" class="form-control"
+											placeholder="Full Name">
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
 										<input name="date" id="date" type="text" class="form-control"
-											placeholder="dd/mm/yyyy">
+											placeholder="Select Date">
 									</div>
 								</div>
 
 								<div class="col-lg-6">
 									<div class="form-group">
 										<input name="time" id="time" type="text" class="form-control"
-											placeholder="Time">
+											placeholder="Select Time">
 									</div>
 								</div>
+
+
 								<div class="col-lg-6">
 									<div class="form-group">
-										<input name="name" id="name" type="text" class="form-control"
-											placeholder="Full Name">
+										<input name="email" id="email" type="email" class="form-control"
+											placeholder="Email Address">
 									</div>
 								</div>
 
 								<div class="col-lg-6">
 									<div class="form-group">
-										<input name="phone" id="phone" type="Number" class="form-control"
+										<input name="phone" id="phone" type="tel" class="form-control"
 											placeholder="Phone Number">
 									</div>
 								</div>
 							</div>
-							<div class="form-group-2 mb-4">
-								<textarea name="message" id="message" class="form-control" rows="6"
-									placeholder="Your Message"></textarea>
-							</div>
 
-							<a class="btn btn-main btn-round-full" href="confirmation.html">Make Appoinment<i
-									class="icofont-simple-right ml-2"></i></a>
+							<button type="submit" class="btn btn-main btn-round-full">Make Appointment <i
+									class="icofont-simple-right ml-2"></i></button>
 						</form>
 					</div>
 				</div>
+
+
 			</div>
+		</div>
+		</div>
 		</div>
 		</div>
 	</section>
@@ -183,25 +192,22 @@
 	<script src="plugins/counterup/jquery.counterup.min.js"></script>
 	<script src="js/script.js"></script>
 	<script src="js/contact.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Initialize date picker
-			flatpickr("#date", {
-				dateFormat: "d/m/Y", // Format the selected date as "dd/mm/yyyy"
-				minDate: "today", // Restrict selection to current or future dates
-				theme: "material_blue", // Use a specific theme
-			});
+		// Initialize date picker
+		flatpickr("#date", {
+			dateFormat: "Y-m-d",
+			minDate: "today",
+		});
 
-			// Initialize time picker
-			flatpickr("#time", {
-				enableTime: true, // Enable time selection
-				noCalendar: true, // Hide the calendar for time picker
-				dateFormat: "H:i", // Format the selected time as "HH:mm"
-				time_24hr: true, // Use 24-hour time format
-				theme: "material_blue", // Use a specific theme
-			});
+		// Initialize time picker
+		flatpickr("#time", {
+			enableTime: true,
+			noCalendar: true,
+			dateFormat: "H:i",
 		});
 	</script>
+
 
 
 </body>
